@@ -85,8 +85,8 @@ public class StreamsActivity {
         // TODO: Stream enemies, chain TWO filter() calls, collect to list
         return enemies
                 .stream()
-                .filter(Enemy::alive)
-                .filter(e -> e.type().equals("flying"))
+                .filter(e -> e.alive)
+                .filter(e -> e.type.equals("flying"))
                 .toList();
     }
 
@@ -97,7 +97,8 @@ public class StreamsActivity {
         // TODO: Stream coins, filter by not collected AND value == 50, collect to list
         return coins
                 .stream()
-                .filter(item -> !item.collected() && item.value() == 50)
+                .filter(coin -> !coin.collected)
+                .filter(coin -> coin.value >= 50)
                 .toList();
     }
 
@@ -112,7 +113,7 @@ public class StreamsActivity {
         // TODO: Stream enemies, map to enemy.name(), collect to list
         return enemies
                 .stream()
-                .map(Enemy::name)
+                .map(e -> e.name)
                 .toList();
     }
 
@@ -124,7 +125,7 @@ public class StreamsActivity {
         // TODO: Stream enemies, map to enemy.hp() * 2, collect to list
         return enemies
                 .stream()
-                .map(e -> e.hp() * 2)
+                .map(e -> 2 * e.hp)
                 .toList();
     }
 
@@ -136,8 +137,8 @@ public class StreamsActivity {
         // TODO: Stream platforms, sort by id (natural order), map to id, collect to list
         return platforms
                 .stream()
-                .map(Platform::id)
-                .sorted()
+                .sorted((p1, p2) -> p1.id.compareTo(p2.id))
+                .map(platform -> platform.id)
                 .toList();
     }
 
@@ -152,7 +153,7 @@ public class StreamsActivity {
         // TODO: Stream coins, filter by not collected, count()
         return coins
                 .stream()
-                .filter(c -> !c.collected())
+                .filter(c -> !c.collected)
                 .count();
     }
 
@@ -166,8 +167,8 @@ public class StreamsActivity {
         //       findFirst().orElse("none")
         return enemies
                 .stream()
-                .filter(e -> e.alive() && e.hp() > 70)
-                .map(Enemy::name)
+                .filter(e -> e.alive && e.hp > 70)
+                .map(e -> e.name)
                 .findFirst()
                 .orElse("none");
     }
@@ -179,7 +180,7 @@ public class StreamsActivity {
         // TODO: Stream enemies, anyMatch()
         return enemies
                 .stream()
-                .anyMatch(enemy -> "ceiling".equals(enemy.type()));
+                .anyMatch(enemy -> enemy.type.equals("ceiling"));
     }
 
     // ─────────────────────────────────────────────
@@ -194,9 +195,9 @@ public class StreamsActivity {
         // TODO
         return highScores.stream()
                 .distinct()
-                .sorted(Comparator.reverseOrder())
+                .sorted((s1, s2) -> -s1.compareTo(s2))
                 .limit(3)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -208,9 +209,9 @@ public class StreamsActivity {
         // TODO
         return enemies
                 .stream()
-                .filter(Enemy::alive)
-                .map(Enemy::name)
-                .sorted()
+                .filter(e -> e.alive)
+                .sorted((e1, e2) -> e1.name.compareTo(e2.name))
+                .map(e -> e.name)
                 .collect(Collectors.joining(", "));
     }
 
@@ -223,8 +224,8 @@ public class StreamsActivity {
         return platforms
                 .stream()
                 .filter(p -> p.width() >= 100f)
-                .sorted(Comparator.comparingDouble(Platform::x))
-                .map(Platform::id)
+                .sorted((p1, p2) -> Float.compare(p1.x, p2.x))
+                .map(p -> p.id)
                 .toList();
     }
 
