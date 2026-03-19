@@ -242,9 +242,15 @@ public class StreamsActivity {
         // TODO
         return coins
                 .stream()
-                .filter(c -> !c.collected())
-                .mapToInt(Coin::value)
+                .filter(c -> !c.collected)
+                .mapToInt(coin -> coin.value)
                 .sum();
+//        return coins.stream()
+//                .filter(coin -> !coin.collected)
+//                .map(coin -> coin.value)
+//                .reduce(Integer::sum)
+//                .orElse(0);
+
     }
 
     /**
@@ -255,8 +261,8 @@ public class StreamsActivity {
         // TODO
         return enemies
                 .stream()
-                .filter(Enemy::alive)
-                .allMatch(e -> e.hp() >= 30);
+                .filter(enemy -> enemy.alive)
+                .allMatch(e -> e.hp >= 30);
     }
 
     /**
@@ -267,16 +273,16 @@ public class StreamsActivity {
      */
     static List<String> aboveAverageHpNames() {
         // TODO
-        double averageHP = enemies.stream()
-                .mapToInt(Enemy::hp)
+        double averageHp = enemies.stream()
+                .mapToInt(enemy -> enemy.hp)
                 .average()
-                .orElse(0.0);
+                .orElse(0);
 
         return enemies
                 .stream()
-                .filter(enemy -> enemy.hp() > averageHP)
-                .map(Enemy::name)
-                .collect(Collectors.toList());
+                .filter(enemy -> enemy.hp >= averageHp)
+                .map(enemy -> enemy.name)
+                .toList();
     }
 
     // ─────────────────────────────────────────────
